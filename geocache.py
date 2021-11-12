@@ -37,6 +37,7 @@ def FillLine(puz,line,letter) :
      for i in line :
         puz[i-1] = letter
 
+#print the puzzle with cols columns
 def PrintPuzzle(cols) :
     low=0
     while low + cols <= len(puzzle) :
@@ -45,6 +46,27 @@ def PrintPuzzle(cols) :
             s += puzzle[i]
         print( s)
         low += cols
+
+# print the puzzle as it was in email
+def FullPrint(p) :
+    for r in range(9):
+        row = r *12
+        s1=""
+        s2=""
+        for c in range(12):
+            cell = row +c
+            # print numbers
+            #works, but this was tough to find
+            s1+= "{0:^3} ".format(cell+1)
+            s2+= " {0}  ".format(p[cell])
+        print(s1)
+        print(s2)
+
+#display the letters and associated cells
+def DisplayPuzzle(puzIn,letters):
+    print("Letter   Cells")
+    for i in range( len(letters)):
+        print( letters[i],"    ",puzIn[i])
 
 
 # script
@@ -74,13 +96,30 @@ letters[10]='H'
 letters[3]="A"
 letters[13]="D"
 #Set up substitution
-for p in range(len(puzIn)) :
-    if p >= len(letters):
-        el = "*"
-    else:
-        el = letters[p]
-    FillLine(puzzle, puzIn[p], el)
-PrintPuzzle(12)
+skipPrint = 0
+while 1:
+    if not( skipPrint ) :
+        for p in range(len(puzIn)) :
+            if p >= len(letters):
+                el = "*"
+            else:
+                el = letters[p]
+            FillLine(puzzle, puzIn[p], el)
+        FullPrint(puzzle)
+    skipPrint = 0
+    inStr = input("enter q, ? or cell number and letter ")
+    if inStr == 'q' :
+        break
+    if inStr == "?" :
+        skipPrint = 1
+        DisplayPuzzle(puzIn, letters)
+    else :
+        d=len(inStr)-1
+        el=inStr[d].upper()
+        n = int(inStr[0:d])
+        for k in range(len(puzIn)):
+            if n in puzIn[k]:
+                letters[k]=el
 
-#while 1 :
-#    pass
+print("Exiting")
+input()
